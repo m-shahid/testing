@@ -1,19 +1,18 @@
 package tests;
 
+import harness.TestInfinity;
 import logger.FrameworkLogger;
 import logger.FrameworkLogger.LEVEL;
-import harness.TestInfinity;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class GWC_Ordering_002  extends TestInfinity{
+public class GWC_Login_002 extends TestInfinity{
 
-	
 	@Test
-	private void gwc_Ordering_002(){
+	private void gwc_Login_002(){
 		
-		FrameworkLogger.log("Starting GWC_Ordering_002", LEVEL.info, GWC_Ordering_002.class);
+		FrameworkLogger.log("Starting GWC_Login_002", LEVEL.info, GWC_Login_002.class);
 		Assert.assertEquals(true, false);
 	}
 }
