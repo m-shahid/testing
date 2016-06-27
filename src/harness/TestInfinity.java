@@ -1,35 +1,44 @@
 package harness;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 import logger.FrameworkLogger;
 import logger.FrameworkLogger.LEVEL;
 
+import org.openqa.selenium.WebDriver;
 import org.testng.TestNG;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeSuite;
 import org.testng.xml.XmlClass;
 import org.testng.xml.XmlSuite;
 import org.testng.xml.XmlTest;
 
-import utils.ExcelReader;
-
 public class TestInfinity {
 
-	ExcelReader excelUtility;
-	private LinkedHashMap<String, String> executionBatchMap;
-	private static final String RUN_MODE_YES = "Yes";
+	public WebDriver driver;
+	Harness frameworkHarness;
 	
 	public TestInfinity(){
 		
-		excelUtility = new ExcelReader();
-		getClasses();
+		frameworkHarness = new Harness();
 	}
 	
 	@BeforeSuite
 	public void initialiseEnvironment(){
 		 
+	}
+	
+	@BeforeClass
+	public void setUP(){
+		driver = frameworkHarness.initializeWebDriver();
+		driver.manage().window().maximize();
+	}
+	
+	@AfterClass
+	public void quiteDriver(){
+		frameworkHarness.closeBrowser();
 	}
 	
 	public void startExecution(){
@@ -86,7 +95,7 @@ public class TestInfinity {
 	private List<XmlClass> getXmlClasses() {
 		List<XmlClass> classes = new ArrayList<XmlClass>();
 		
-		ArrayList<String> testScripts = getClasses();
+		ArrayList<String> testScripts = frameworkHarness.getClasses();
 		
 		for(int i=0; i<testScripts.size(); i++){
 			
@@ -96,34 +105,5 @@ public class TestInfinity {
 		return classes;
 	}
 	
-	private ArrayList<String> getClasses(){
-		
-		ArrayList<String> testScript = null;
-		
-		try{
-			
-			testScript = new ArrayList<String>();
-			executionBatchMap = excelUtility.readExecutionBatch();
-			
-			for(String key : executionBatchMap.keySet()){
-				
-				System.out.println("Test Script Name : "+key+" And Run Mode : "+executionBatchMap.get(key));
-				
-				String strRunMode = executionBatchMap.get(key);
-				
-				if(strRunMode.equalsIgnoreCase(RUN_MODE_YES)){
-					
-					testScript.add(key);
-				}
-			}
-			
-			return testScript;
-			
-		}catch(Exception msg){
-			
-			FrameworkLogger.log("Exception while getting test scripts to be executed. See getClasses() for more details", LEVEL.fatal, TestInfinity.class);
-			return null;
-		}
-		
-	}
+	
 }
